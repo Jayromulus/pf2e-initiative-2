@@ -16,32 +16,33 @@ const reverseInitiative = getId('reverse-initiative')
 const display = getId('data-display')
 
 let playerLength = 0
+// move initiativeIndex to localstorage so that it retains between sessions as needed
+// with a button to reset position to top as well as button to reset board but keeping party
+// maybe with a tag on players to indicate they are party
 let initiativeIndex = 0
 
 window.onload = displayPlayerData();
-// track the "current turn" and highlight the player, starting from the top of initiative. probably have some sort of button to show that the combat will begin and highlight the player
+// track the "current turn" and highlight the player, starting from the top of initiative.
+// probably have some sort of button to show that the combat will begin and highlight the player
 
 storeDummyData.addEventListener('click', e => {
   e.preventDefault()
   log('storing data')
 
-  const currentPlayers = localStorage.getItem('players') ? JSON.parse(localStorage.getItem('players')) : []
+  const players = localStorage.getItem('players') ? JSON.parse(localStorage.getItem('players')) : []
 
-  log({currentPlayers})
+  log({players})
 
   const maxHP = Math.floor(Math.random()*100)+1
-  currentPlayers.push({name: `Player ${Math.random().toString().slice(-4)}`, maxHP, currentHP: Math.floor(Math.random()*maxHP)+1 })
+  players.push({name: `Player ${Math.random().toString().slice(-4)}`, maxHP, currentHP: Math.floor(Math.random()*maxHP)+1 })
 
-  localStorage.setItem('players', JSON.stringify(currentPlayers))
-
-  displayPlayerData()
+  savePlayers(players)
 })
 
 clearDummyData.addEventListener('click', e => {
   e.preventDefault()
   log('clearing data')
-  localStorage.setItem('players', '')
-  displayPlayerData()
+  savePlayers('')
 })
 
 readDummyData.addEventListener('click', e => {
@@ -150,22 +151,55 @@ function increaseInitiative(players, current) {
   log({players})
   target = current > 0 ? current-- : players.length - 1
   players.swap(current, target)
-  log({players})
-  localStorage.setItem('players', JSON.stringify(players))
-  initiativeIndex === 0 ? initiativeIndex = playerLength : null
-  displayPlayerData()
+  initiativeIndex === 0 ? initiativeIndex = playerLength : initiativeIndex === target ? initiativeIndex-- : null
+  savePlayers(players)
 }
 
 function decreaseInitiative(players, current) {
   log(`move the player [${players[current].name}] down in initiative by 1, then re-render`)
-  
+  log({players})
+  target = current+1 < players.length - 1 ? current++ : 0
+  players.swap(current, target)
+  initiativeIndex+1 < playerLength ? initiativeIndex++ : initiativeIndex = 0
+  savePlayers(players)
 }
 
 function addHealth(players, current, amount) {
   log(`add ${amount} health to ${players[current].currentHP}, then re-render`)
+  // overheal bar should just be an optional extra bar nested within the hp bar,
+  // similar styling but yellow rather than green
+  max = players[current].maxHP
+  cur = players[current].currentHP
+  amount = Number(amount)
+  let newHealth = cur + amount >= max ? max : cur + amount
 
+  log({newHealth})
+
+  players[current].currentHP = newHealth
+  savePlayers(players)
 }
 
 function loseHealth(players, current, amount) {
   log(`remove ${amount} health from ${players[current].currentHP}, minumum 1, then re-render. if the health goes to zero, move them above the person who placed them at 0 health as tracked by the "current turn"`)
+  max = players[current].maxHP
+  cur = players[current].currentHP
+  amount = Number(amount)
+  let newHealth = cur - amount < 0 ? 0 : cur - amount
+
+  log({newHealth})
+
+  players[current].currentHP = newHealth
+
+  if(newHealth === 0)
+    movePlayerPosition(current, initiativeIndex)
+  savePlayers(players)
+}
+
+function movePlayerPosition(current, goal) {
+  log('repeat the swap command, until the current player is above the initiativeIndex position, making space if needed at top of initiative')
+}
+
+function savePlayers(players) {
+  localStorage.setItem('players', JSON.stringify(players));
+  displayPlayerData()
 }
