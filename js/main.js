@@ -152,7 +152,7 @@ function increaseInitiative(players, current) {
   players.swap(current, target)
   log({players})
   localStorage.setItem('players', JSON.stringify(players))
-  initiativeIndex === 0 ? initiativeIndex = playerLength : initiativeIndex--
+  initiativeIndex === 0 ? initiativeIndex = playerLength : null
   displayPlayerData()
 }
 
