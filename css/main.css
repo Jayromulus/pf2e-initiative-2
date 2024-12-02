@@ -6,8 +6,20 @@ body {
   overflow: hidden;
 }
 
+p {
+  margin: 0 10px;
+}
+
 #data-display {
   width: 100%;
+}
+
+.player-name, .player-hp-num {
+  display: inline;
+}
+
+.player-hp-num {
+  margin-left: auto;
 }
 
 .player-hp {
