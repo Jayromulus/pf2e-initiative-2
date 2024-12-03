@@ -151,18 +151,17 @@ function generatePlayerCard(player, index, currentPlayers) {
 
 function increaseInitiativeOrder(players, current) {
   log(`move the player [${players[current].name}] up in initiative by 1, then re-render`)
-  // log({players})
   target = current > 0 ? current-- : players.length - 1
 
-  players.swap(current, target)
-  
-  initiativeIndex === 0 && target === initiativeIndex && target > 1 ?
+  initiativeIndex === 0 && current === initiativeIndex && target === playerLength ?
     initiativeIndex = playerLength :
-  initiativeIndex === target && target >= 0 ?
+  initiativeIndex === target && target <= playerLength ?
     initiativeIndex-- :
-  initiativeIndex === target ?
+  initiativeIndex === current ?
     initiativeIndex++ :
   null
+
+  players.swap(current, target)
 
   savePlayers(players)
 }
@@ -173,7 +172,9 @@ function decreaseInitiativeOrder(players, current) {
 
   initiativeIndex+1 > playerLength && current === initiativeIndex && target < 1 ?
     initiativeIndex = 0 :
-  initiativeIndex === target && current >= 0 ?
+  initiativeIndex === 0 && current === playerLength && target < 1 ?
+    initiativeIndex = playerLength :
+  initiativeIndex === target && current >= 0 && initiativeIndex > 0 ?
     initiativeIndex++ :
   initiativeIndex === current ?
     initiativeIndex-- :
