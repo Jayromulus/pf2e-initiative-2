@@ -8,11 +8,12 @@ Array.prototype.swap = function (x, y) {
 }
 // const playerData = localStorage.getItem('players') ?? []
 
+const readDummyData = getId('test-read')
 const storeDummyData = getId('test-store')
 const clearDummyData = getId('clear-data')
-const readDummyData = getId('test-read')
 const furtherInitiative = getId('further-initiative')
 const reverseInitiative = getId('reverse-initiative')
+const initiativeDisplay = getId('initiative')
 const display = getId('data-display')
 
 let playerLength = 0
@@ -42,7 +43,8 @@ storeDummyData.addEventListener('click', e => {
 clearDummyData.addEventListener('click', e => {
   e.preventDefault()
   log('clearing data')
-  savePlayers('')
+  localStorage.removeItem('players')
+  displayPlayerData()
 })
 
 readDummyData.addEventListener('click', e => {
@@ -81,9 +83,10 @@ function displayPlayerData() {
     newPlayerList.push(newPlayer)
   });
 
-  log({currentPlayers})
+  // log({currentPlayers})
 
   display.innerHTML = ''
+  initiativeDisplay.innerText = initiativeIndex
   display.append(...newPlayerList)
 }
 
@@ -111,11 +114,11 @@ function generatePlayerCard(player, index, currentPlayers) {
 
   upInitiative.addEventListener('click', e => {
     e.preventDefault()
-    increaseInitiative(currentPlayers, index)
+    increaseInitiativeOrder(currentPlayers, index)
   })
   downInitiative.addEventListener('click', e => {
     e.preventDefault()
-    decreaseInitiative(currentPlayers, index)
+    decreaseInitiativeOrder(currentPlayers, index)
   })
   addHealthBtn.addEventListener('click', e => {
     e.preventDefault()
@@ -146,21 +149,50 @@ function generatePlayerCard(player, index, currentPlayers) {
   return newPlayer
 }
 
-function increaseInitiative(players, current) {
+function increaseInitiativeOrder(players, current) {
   log(`move the player [${players[current].name}] up in initiative by 1, then re-render`)
-  log({players})
+  // log({players})
   target = current > 0 ? current-- : players.length - 1
+
   players.swap(current, target)
-  initiativeIndex === 0 ? initiativeIndex = playerLength : initiativeIndex === target ? initiativeIndex-- : null
+  
+  initiativeIndex === 0 && current === initiativeIndex && target > 1 ?
+    initiativeIndex = playerLength :
+  initiativeIndex === target && current >= 0 ?
+    initiativeIndex-- :
+  initiativeIndex === current ?
+    initiativeIndex++ :
+  null
+
   savePlayers(players)
 }
 
-function decreaseInitiative(players, current) {
+function decreaseInitiativeOrder(players, current) {
   log(`move the player [${players[current].name}] down in initiative by 1, then re-render`)
-  log({players})
+  // log({players})
   target = current+1 < players.length - 1 ? current++ : 0
+
+  log({
+    state: 'BEFORE',
+    current,
+    target,
+    initiative: initiativeIndex
+  })
+
   players.swap(current, target)
-  initiativeIndex+1 < playerLength ? initiativeIndex++ : initiativeIndex = 0
+
+  if(initiativeIndex + 1 < playerLength && target === initiativeIndex)
+    initiativeIndex++
+  else if(target + 1 > playerLength)
+    initiativeIndex = 0
+
+  log({
+    state: 'AFTER',
+    current,
+    target,
+    initiative: initiativeIndex
+  })
+
   savePlayers(players)
 }
 
@@ -191,12 +223,18 @@ function loseHealth(players, current, amount) {
   players[current].currentHP = newHealth
 
   if(newHealth === 0)
-    movePlayerPosition(current, initiativeIndex)
+    movePlayerPosition(players, current, initiativeIndex)
   savePlayers(players)
 }
 
-function movePlayerPosition(current, goal) {
+function movePlayerPosition(players, current, goal) {
+  if(goal >= players.length) {
+    log('failed to move')
+    return
+  }
+  
   log('repeat the swap command, until the current player is above the initiativeIndex position, making space if needed at top of initiative')
+
 }
 
 function savePlayers(players) {
