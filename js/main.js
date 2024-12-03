@@ -169,41 +169,18 @@ function increaseInitiativeOrder(players, current) {
 
 function decreaseInitiativeOrder(players, current) {
   log(`move the player [${players[current].name}] down in initiative by 1, then re-render`)
-  // log({players})
   target = current < playerLength ? current++ : 0
-  // console.clear()
-
-  // log({
-  //   state: 'BEFORE',
-  //   current,
-  //   target,
-  //   initiative: initiativeIndex
-  // })
-
-  const currentPlayer = players[current]
-  log(currentPlayer)
-  log(players.indexOf(currentPlayer))
 
   players.swap(current, target)
 
-  log(players.indexOf(currentPlayer))
-  log(currentPlayer)
-
-  // if(target === initiativeIndex && initiativeIndex !== 0)
-  //   initiativeIndex--
-  // else if(initiativeIndex < playerLength && target === initiativeIndex)
-  //   initiativeIndex++
-  // else if(current === initiativeIndex && initiativeIndex === playerLength)
-  //   initiativeIndex = 0
-  // else
-  //   initiativeIndex = playerLength
-
-  log({
-    state: 'AFTER',
-    current,
-    target,
-    initiative: initiativeIndex
-  })
+  if(target === initiativeIndex && initiativeIndex !== 0)
+    initiativeIndex--
+  else if(initiativeIndex < playerLength && target === initiativeIndex)
+    initiativeIndex++
+  else if(current === initiativeIndex && initiativeIndex === playerLength)
+    initiativeIndex = 0
+  else
+    initiativeIndex = playerLength
 
   savePlayers(players)
 }
