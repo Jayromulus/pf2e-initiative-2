@@ -222,7 +222,6 @@ function movePlayerPosition(players, current, goal) {
   }
   
   log('repeat the swap command, until the current player is above the initiativeIndex position, making space if needed at top of initiative')
-
 }
 
 function savePlayers(players) {
