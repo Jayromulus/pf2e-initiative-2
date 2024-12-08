@@ -151,7 +151,7 @@ function generatePlayerCard(player, index, currentPlayers) {
 
 function increaseInitiativeOrder(players, current) {
   target = current > 0 ? current-- : players.length - 1
-  
+
   initiativeIndex === 0 && current === initiativeIndex && target === playerLength ? 
     initiativeIndex = playerLength :
   initiativeIndex === playerLength && target === playerLength && current === 0 ?
@@ -221,13 +221,15 @@ function movePlayerPosition(players, current, goal) {
     log('failed to move')
     return
   }
-  
+  // let i = 0
+  // while(i < 2) {
+  //   increaseInitiativeOrder(players, current)
+  //   i++
+  // }
   log('repeat the swap command, until the current player is above the initiativeIndex position, making space if needed at top of initiative')
 }
 
 function savePlayers(players) {
   localStorage.setItem('players', JSON.stringify(players));
   displayPlayerData()
-
-
 }
