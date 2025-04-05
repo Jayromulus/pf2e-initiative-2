@@ -23,6 +23,10 @@ p {
   margin-left: auto;
 }
 
+#button-controls {
+	margin: 0 5px;
+}
+
 .player-hp {
   /* background-color: black; */
   border-radius: 13px;
@@ -54,3 +58,8 @@ p {
   height: 100%;
   border-radius: 9px;
 } */
+
+::backdrop {
+	background-color: black;
+	opacity: .66;
+}

@@ -7,25 +7,39 @@
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-  <h1 style="margin: 0">PF2e Initiative Tracker <span id="initiative"></span></h1>
+  <h1 style="margin: 0; text-align: center">PF2e Initiative Tracker <span id="initiative"></span></h1>
 
   <ul class="main-list"></ul>
+	
+	<div id="button-controls">
+		<div id="top-row-controls">
+	  	<button type="button" id="test-store">Add Character</button>
+		  <button type="button" id="clear-data">Remove All Characters</button>
+		</div>
+		<div id="bot-row-controls">
+  		<button type="button" id="further-initiative">Forward in Initiative</button>
+		  <button type="button" id="reverse-initiative">Go Back in Initiative</button>
+		</div>
+	</div>
 
-  <button type="button" id="test-store">Store Dummy Data</button>
-  <button type="button" id="clear-data">Clear Dummy Data</button>
-  <button type="button" id="test-read">Read Dummy Data</button>
-  <button type="button" id="further-initiative">Forward in Initiative</button>
-  <button type="button" id="reverse-initiative">Go Back in Initiative</button>
-
-  <div id="data-display">
+	<div style="margin: 0 5px">
+  	<div id="data-display">
     <!-- <div id="example-player">
       <h1 id="example-player-name">Example Player</h1>
       <div id="example-player-hp">
         <div></div>
       </div>
-      <!-- <div id="progress"></div>
+      <div id="progress"></div>https://thegoodshirts.com/products/recession-sweatshirt?variant=46049398358274
     </div> -->
-  </div>
+	  </div>
+	</div>
+
+	<dialog>
+		<input id="character-name" placeholder="Character Name" autofocus />
+		<input id="character-hp" placeholder="Max Health" />
+		<button id="add-player">Add Character</button>
+		<button id="close-dialog">Close</button>
+	</dialog>
 
   <script src="./main.js"></script>
 </body>

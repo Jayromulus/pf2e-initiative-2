@@ -8,13 +8,17 @@ Array.prototype.swap = function (x, y) {
 }
 // const playerData = localStorage.getItem('players') ?? []
 
-const readDummyData = getId('test-read')
 const storeDummyData = getId('test-store')
 const clearDummyData = getId('clear-data')
 const furtherInitiative = getId('further-initiative')
 const reverseInitiative = getId('reverse-initiative')
 const initiativeDisplay = getId('initiative')
 const display = getId('data-display')
+const dialog = document.querySelector('dialog');
+const closeDialog = document.getElementById('close-dialog');
+const addCharacter = document.getElementById('add-player');
+const newCharacterName = document.getElementById('character-name');
+const newCharacterHP = document.getElementById('character-hp');
 
 let playerLength = 0
 // move initiativeIndex to localstorage so that it retains between sessions as needed
@@ -26,6 +30,7 @@ window.onload = displayPlayerData();
 // track the "current turn" and highlight the player, starting from the top of initiative.
 // probably have some sort of button to show that the combat will begin and highlight the player
 
+/*
 storeDummyData.addEventListener('click', e => {
   e.preventDefault()
   log('storing data')
@@ -39,28 +44,46 @@ storeDummyData.addEventListener('click', e => {
 
   savePlayers(players)
 })
+*/
+storeDummyData.addEventListener('mousedown', e => {
+	e.preventDefault();
+	dialog.showModal();
+});
 
-clearDummyData.addEventListener('click', e => {
+closeDialog.addEventListener('mousedown', e => {
+	dialog.close();
+});
+
+addCharacter.addEventListener('mousedown', e => {
+	e.preventDefault();
+	
+  const players = localStorage.getItem('players') ? JSON.parse(localStorage.getItem('players')) : []
+
+  const maxHP = Number(newCharacterHP.value);
+  players.push({name: newCharacterName.value, maxHP, currentHP: maxHP });
+
+	newCharacterName.value = '';
+	newCharacterHP.value = '';
+  
+	savePlayers(players);
+	dialog.close();
+});
+
+clearDummyData.addEventListener('mousedown', e => {
   e.preventDefault()
   log('clearing data')
   localStorage.removeItem('players')
   displayPlayerData()
 })
 
-readDummyData.addEventListener('click', e => {
-  e.preventDefault()
-  log('reading data')
-  displayPlayerData()
-})
-
-furtherInitiative.addEventListener('click', e => {
+furtherInitiative.addEventListener('mousedown', e => {
   e.preventDefault()
   log('advancing initiative')
   initiativeIndex < playerLength ? initiativeIndex++ : initiativeIndex = 0
   displayPlayerData()
 })
 
-reverseInitiative.addEventListener('click', e => {
+reverseInitiative.addEventListener('mousedown', e => {
   e.preventDefault()
   log('reversing initiative')
   initiativeIndex === 0 ? initiativeIndex = playerLength : initiativeIndex--
@@ -112,20 +135,20 @@ function generatePlayerCard(player, index, currentPlayers) {
   loseHealthBtn.innerText = '-'
   healthChange.type = 'number'
 
-  upInitiative.addEventListener('click', e => {
+  upInitiative.addEventListener('mousedown', e => {
     e.preventDefault()
     increaseInitiativeOrder(currentPlayers, index)
   })
-  downInitiative.addEventListener('click', e => {
+  downInitiative.addEventListener('mousedown', e => {
     e.preventDefault()
     decreaseInitiativeOrder(currentPlayers, index)
   })
-  addHealthBtn.addEventListener('click', e => {
+  addHealthBtn.addEventListener('mousedown', e => {
     e.preventDefault()
     addHealth(currentPlayers, index, healthChange.value)
     healthChange.value = null
   })
-  loseHealthBtn.addEventListener('click', e => {
+  loseHealthBtn.addEventListener('mousedown', e => {
     e.preventDefault()
     loseHealth(currentPlayers, index, healthChange.value)
     healthChange.value = null
