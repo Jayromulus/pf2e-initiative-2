@@ -5,6 +5,7 @@ body {
   width: 100vw;
   overflow: hidden;
   background-color: gray;
+	font-family: helvetica;
 }
 
 p {
@@ -13,6 +14,10 @@ p {
 
 #data-display {
   width: 100%;
+}
+
+.player {
+	padding: 5px 0;
 }
 
 .player-name, .player-hp-num {
