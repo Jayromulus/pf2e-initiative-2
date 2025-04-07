@@ -46,6 +46,7 @@ storeDummyData.addEventListener('click', e => {
   savePlayers(players)
 })
 */
+
 storeDummyData.addEventListener('mousedown', e => {
 	e.preventDefault();
 	dialog.showModal();

@@ -1,4 +1,4 @@
-body {
+body, html {
   margin: 0;
   padding: 0;
   height: 100vh;
@@ -26,10 +26,6 @@ p {
 
 .player-hp-num {
   margin-left: auto;
-}
-
-#button-controls {
-	margin: 0 5px;
 }
 
 .player-hp {
@@ -67,4 +63,14 @@ p {
 ::backdrop {
 	background-color: black;
 	opacity: .66;
+}
+
+#button-controls {
+	margin: 5px;
+}
+
+#button-controls button {
+	border: none;
+	width: 20%;
+	justify: space-between;
 }
