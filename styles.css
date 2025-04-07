@@ -4,7 +4,9 @@ body, html {
   height: 100vh;
   width: 100vw;
   overflow: hidden;
-  background-color: gray;
+
+  background-color: #7446b7;
+	color: white;
 	font-family: helvetica;
 }
 
@@ -17,7 +19,10 @@ p {
 }
 
 .player {
-	padding: 5px 0;
+	margin: 5px 0 0;
+	padding: 3px 0 1px;
+	
+	border-radius: 15px;
 }
 
 .player-name, .player-hp-num {
@@ -28,14 +33,31 @@ p {
   margin-left: auto;
 }
 
+.move-initiative {
+	margin-left: auto;
+}
+
+.top-player-section {
+	margin: 5px 10px 0 2px;
+
+	display: grid;
+	grid-template-columns: 2fr auto auto 1fr 1fr 1fr 1fr;
+	/* grid-template-columns: repeat(1fr, 12); */
+}
+
+.change-health-input {
+	max-width: 100px;
+}
+
 .player-hp {
   /* background-color: black; */
   border-radius: 13px;
   /* (height of inner div) / 2 + padding */
   padding: 3px;
+	margin: 4px;
 }
 
-.player-hp>div {
+.player-hp > div {
   background-color: greenyellow;
   /* width: 40%; */
   /* Adjust with JavaScript */
@@ -67,10 +89,21 @@ p {
 
 #button-controls {
 	margin: 5px;
+	display: grid;
+	grid-template-columns: auto auto auto auto;
 }
 
 #button-controls button {
+	width: 90%;
+	margin: 5% 5% 0px;
+	
 	border: none;
-	width: 20%;
-	justify: space-between;
+	border-radius: 5px;
+	
+	background-color: #2e2e2e;
+	color: #e3e3e3;
+
+	padding: 5% 0px;
 }
+
+

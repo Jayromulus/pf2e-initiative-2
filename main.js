@@ -75,6 +75,7 @@ clearDummyData.addEventListener('mousedown', e => {
   e.preventDefault()
   log('clearing data')
   localStorage.removeItem('players')
+	initiativeIndex = 1;
   displayPlayerData()
 })
 
@@ -119,6 +120,7 @@ function displayPlayerData() {
 
 function generatePlayerCard(player, index, currentPlayers) {
   const newPlayer = document.createElement('div');
+	const topPlayerSection = document.createElement('div');
   const newPlayerName = document.createElement('p');
   const newPlayerHPNum = document.createElement('p');
   const newPlayerHP = document.createElement('div');
@@ -130,7 +132,8 @@ function generatePlayerCard(player, index, currentPlayers) {
   const loseHealthBtn = document.createElement('button');
   
   newPlayerName.innerText = player.name;
-  newPlayerHP.style.backgroundColor = index === initiativeIndex ? 'red' : 'black';
+  newPlayer.style.backgroundColor = index === initiativeIndex ? 'rgba(46, 16, 86, 0.7)' : 'rgba(46, 16, 86, 0.4)';
+	newPlayerHP.style.backgroundColor = 'black';
   newPlayerHPNum.innerText = `${player.currentHP} / ${player.maxHP}`;
   newPlayerCurrentHP.style.width = `${Math.floor((player.currentHP / player.maxHP)*100)}%`;
   upInitiative.innerText = '↑';
@@ -138,7 +141,7 @@ function generatePlayerCard(player, index, currentPlayers) {
   addHealthBtn.innerText = '+';
   loseHealthBtn.innerText = '-';
   healthChange.type = 'number';
-
+	
   upInitiative.addEventListener('mousedown', e => {
     e.preventDefault();
     increaseInitiativeOrder(currentPlayers, index);
@@ -161,15 +164,22 @@ function generatePlayerCard(player, index, currentPlayers) {
   newPlayer.classList.add('player');
   newPlayerName.classList.add('player-name');
   newPlayerHPNum.classList.add('player-hp-num');
+	topPlayerSection.classList.add('top-player-section');
   newPlayerHP.classList.add('player-hp');
+	upInitiative.classList.add('move-initiative');
+	downInitiative.classList.add('move-initiative');
+	addHealthBtn.classList.add('change-health');
+	loseHealthBtn.classList.add('change-health');
+	healthChange.classList.add('change-health-input');
   
-  newPlayer.appendChild(newPlayerName);
-  newPlayer.appendChild(newPlayerHPNum);
-  newPlayer.appendChild(upInitiative);
-  newPlayer.appendChild(downInitiative);
-  newPlayer.appendChild(healthChange);
-  newPlayer.appendChild(addHealthBtn);
-  newPlayer.appendChild(loseHealthBtn);
+  topPlayerSection.appendChild(newPlayerName);
+  topPlayerSection.appendChild(newPlayerHPNum);
+  topPlayerSection.appendChild(healthChange);
+  topPlayerSection.appendChild(addHealthBtn);
+  topPlayerSection.appendChild(loseHealthBtn);
+  topPlayerSection.appendChild(upInitiative);
+  topPlayerSection.appendChild(downInitiative);
+	newPlayer.appendChild(topPlayerSection);
   newPlayerHP.appendChild(newPlayerCurrentHP);
   newPlayer.appendChild(newPlayerHP);
 
