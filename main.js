@@ -134,6 +134,7 @@ function generatePlayerCard(player, index, currentPlayers) {
   const newPlayerCurrentHP = document.createElement('div');
   const upInitiative = document.createElement('button');
   const downInitiative = document.createElement('button');
+	const healthAdjustmentGroup = document.createElement('div');
   const healthChange = document.createElement('input');
   const addHealthBtn = document.createElement('button');
   const loseHealthBtn = document.createElement('button');
@@ -184,14 +185,19 @@ function generatePlayerCard(player, index, currentPlayers) {
 	addHealthBtn.classList.add('change-health');
 	loseHealthBtn.classList.add('change-health');
 	healthChange.classList.add('change-health-input');
+	healthAdjustmentGroup.classList.add('change-health-group');
   
   topPlayerSection.appendChild(newPlayerName);
   topPlayerSection.appendChild(newPlayerHPNum);
-  topPlayerSection.appendChild(healthChange);
-  topPlayerSection.appendChild(addHealthBtn);
-  topPlayerSection.appendChild(loseHealthBtn);
+	
+  healthAdjustmentGroup.appendChild(addHealthBtn);
+  healthAdjustmentGroup.appendChild(healthChange);
+  healthAdjustmentGroup.appendChild(loseHealthBtn);
+
+	topPlayerSection.appendChild(healthAdjustmentGroup);
   topPlayerSection.appendChild(upInitiative);
   topPlayerSection.appendChild(downInitiative);
+
 	newPlayer.appendChild(topPlayerSection);
   newPlayerHP.appendChild(newPlayerCurrentHP);
   newPlayer.appendChild(newPlayerHP);
