@@ -14,11 +14,18 @@ const furtherInitiative = getId('further-initiative');
 const reverseInitiative = getId('reverse-initiative');
 const initiativeDisplay = getId('initiative');
 const display = getId('data-display');
-const dialog = document.getElementById('add-character-dialog');
-const closeDialog = document.getElementById('close-dialog');
-const addCharacter = document.getElementById('add-player');
-const newCharacterName = document.getElementById('character-name');
-const newCharacterHP = document.getElementById('character-hp');
+const dialog = getId('add-character-dialog');
+const closeDialog = getId('close-dialog');
+const addCharacter = getId('add-player');
+const newCharacterName = getId('character-name');
+const newCharacterHP = getId('character-hp');
+
+const lowHealth = 'red';
+const midHealth = 'yellow';
+const highHealth = 'greenyellow';
+
+const selected = 'rgba(46, 16, 86, 0.7)';
+const unselected = 'rgba(46, 16, 86, 0.4)';
 
 // let playerLength = 0;
 // move initiativeIndex to localstorage so that it retains between sessions as needed
@@ -131,11 +138,17 @@ function generatePlayerCard(player, index, currentPlayers) {
   const addHealthBtn = document.createElement('button');
   const loseHealthBtn = document.createElement('button');
   
+	const currentHealthPercent = Math.floor((player.currentHP / player.maxHP)*100);
+
+	healthChange.type = "number";
+	healthChange.min = 1;
+
   newPlayerName.innerText = player.name;
-  newPlayer.style.backgroundColor = index === initiativeIndex ? 'rgba(46, 16, 86, 0.7)' : 'rgba(46, 16, 86, 0.4)';
-	newPlayerHP.style.backgroundColor = 'black';
+  newPlayer.style.backgroundColor = index === initiativeIndex ? selected : unselected;
   newPlayerHPNum.innerText = `${player.currentHP} / ${player.maxHP}`;
-  newPlayerCurrentHP.style.width = `${Math.floor((player.currentHP / player.maxHP)*100)}%`;
+  newPlayerCurrentHP.style.width = `${currentHealthPercent > 100 ? 100 : currentHealthPercent}%`;
+	newPlayerCurrentHP.style.backgroundColor = currentHealthPercent < 21 ? lowHealth : currentHealthPercent < 46 ? midHealth : highHealth;
+
   upInitiative.innerText = '↑';
   downInitiative.innerText = '↓';
   addHealthBtn.innerText = '+';
@@ -152,12 +165,12 @@ function generatePlayerCard(player, index, currentPlayers) {
   })
   addHealthBtn.addEventListener('mousedown', e => {
     e.preventDefault();
-    addHealth(currentPlayers, index, healthChange.value);
+    addHealth(currentPlayers, index, Math.abs(healthChange.value));
     healthChange.value = null;
   })
   loseHealthBtn.addEventListener('mousedown', e => {
     e.preventDefault();
-    loseHealth(currentPlayers, index, healthChange.value);
+    loseHealth(currentPlayers, index, Math.abs(healthChange.value));
     healthChange.value = null;
   })
   
@@ -227,7 +240,7 @@ function decreaseInitiativeOrder(players, current) {
 }
 
 function addHealth(players, current, amount) {
-  log(`add ${amount} health to ${players[current].currentHP}, then re-render`);
+  // log(`add ${amount} health to ${players[current].currentHP}, then re-render`);
   // overheal bar should just be an optional extra bar nested within the hp bar,
   // similar styling but yellow rather than green
   max = players[current].maxHP;
