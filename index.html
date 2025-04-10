@@ -3,33 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
   <title>PF2e Initiative</title>
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-	<!--  <h1 style="margin: 0; text-align: center">PF2e Initiative Tracker <span id="initiative"></span></h1> -->
-
-	<!-- <ul class="main-list"></ul> -->
-	
 	<div id="button-controls">
-		<!-- <div id="top-row-controls">-->
-	  	<button type="button" id="test-store">Add Character</button>
-		  <button type="button" id="clear-data">Remove All Characters</button>
-		<!-- </div>
-		<div id="bot-row-controls"> -->
-  		<button type="button" id="further-initiative">Forward in Initiative</button>
-		  <button type="button" id="reverse-initiative">Go Back in Initiative</button>
-			<!-- </div> -->
+	  <button type="button" id="add-character">Add Character</button>
+		<button type="button" id="clear-data">Remove All Characters</button>
+  	<button type="button" id="further-initiative">Forward in Initiative</button>
+		<button type="button" id="reverse-initiative">Go Back in Initiative</button>
 	</div>
 
-  <div id="data-display">
-  <!-- <div id="example-player">
-      <h1 id="example-player-name">Example Player</h1>
-      <div id="example-player-hp">
-        <div></div>
-      </div>
-    </div> -->
-	</div>
+  <div id="data-display"></div>
 
 	<dialog id="add-character-dialog">
 		<input id="character-name" placeholder="Character Name" autofocus />

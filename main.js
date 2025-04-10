@@ -1,4 +1,5 @@
 const getId = id => document.getElementById(id);
+const createElement = tag => document.createElement(tag);
 const log = console.log;
 Array.prototype.swap = function (x, y) {
   let b = this[x]
@@ -6,10 +7,9 @@ Array.prototype.swap = function (x, y) {
   this[y] = b
   return this
 }
-// const playerData = localStorage.getItem('players') ?? []
 
-const storeDummyData = getId('test-store');
-const clearDummyData = getId('clear-data');
+const storeCharacterData = getId('add-character');
+const clearCharacterData = getId('clear-data');
 const furtherInitiative = getId('further-initiative');
 const reverseInitiative = getId('reverse-initiative');
 const initiativeDisplay = getId('initiative');
@@ -27,34 +27,13 @@ const highHealth = 'greenyellow';
 const selected = 'rgba(46, 16, 86, 0.7)';
 const unselected = 'rgba(46, 16, 86, 0.4)';
 
-// let playerLength = 0;
-// move initiativeIndex to localstorage so that it retains between sessions as needed
-// with a button to reset position to top as well as button to reset board but keeping party
-// maybe with a tag on players to indicate they are party
+//! add an option for updating a player's information by clicking on the health or name section of the card and create a modal popup with places to change the values, as well as an option to save or delete the character. upon deletion shift to the previous position in initiative order
+
 let initiativeIndex = localStorage.getItem('initiativeIndex') ? Number(localStorage.getItem('initiativeIndex')) : 0;
 log(typeof localStorage.getItem('initiativeIndex'));
 
 window.onload = displayPlayerData();
-// track the "current turn" and highlight the player, starting from the top of initiative.
-// probably have some sort of button to show that the combat will begin and highlight the player
-
-/*
-storeDummyData.addEventListener('click', e => {
-  e.preventDefault()
-  log('storing data')
-
-  const players = localStorage.getItem('players') ? JSON.parse(localStorage.getItem('players')) : []
-
-  log({players})
-
-  const maxHP = Math.floor(Math.random()*100)+1
-  players.push({name: `Player ${Math.random().toString().slice(-4)}`, maxHP, currentHP: Math.floor(Math.random()*maxHP)+1 })
-
-  savePlayers(players)
-})
-*/
-
-storeDummyData.addEventListener('mousedown', e => {
+storeCharacterData.addEventListener('mousedown', e => {
 	e.preventDefault();
 	dialog.showModal();
 });
@@ -78,66 +57,60 @@ addCharacter.addEventListener('mousedown', e => {
 	dialog.close();
 });
 
-clearDummyData.addEventListener('mousedown', e => {
-  e.preventDefault()
-  log('clearing data')
+clearCharacterData.addEventListener('mousedown', e => {
+  e.preventDefault();
   localStorage.removeItem('players')
 	initiativeIndex = 1;
-  displayPlayerData()
+  displayPlayerData();
 })
 
 furtherInitiative.addEventListener('mousedown', e => {
-  e.preventDefault()
-  log('advancing initiative')
-  initiativeIndex < playerLength ? initiativeIndex++ : initiativeIndex = 0
+  e.preventDefault();
+  initiativeIndex < playerLength ? initiativeIndex++ : initiativeIndex = 0;
 	localStorage.setItem('initiativeIndex', initiativeIndex);
-  displayPlayerData()
+  displayPlayerData();
 })
 
 reverseInitiative.addEventListener('mousedown', e => {
-  e.preventDefault()
-  log('reversing initiative')
-  initiativeIndex === 0 ? initiativeIndex = playerLength : initiativeIndex--
+  e.preventDefault();
+  initiativeIndex === 0 ? initiativeIndex = playerLength : initiativeIndex--;
 	localStorage.setItem('initiativeIndex', initiativeIndex);
-  displayPlayerData()
+  displayPlayerData();
 })
 
 function displayPlayerData() {
-  const currentPlayers = localStorage.getItem('players') ? JSON.parse(localStorage.getItem('players')) : []
-  const newPlayerList = []
+  const currentPlayers = localStorage.getItem('players') ? JSON.parse(localStorage.getItem('players')) : [];
+  const newPlayerList = [];
 
   if(!currentPlayers[0]) {
-    display.innerText = 'No Players Currently'
-    return
+    display.innerText = 'No Players Currently';
+    return;
   }
 
-  playerLength = currentPlayers.length - 1
+  playerLength = currentPlayers.length - 1;
   
   currentPlayers.forEach((player, index) => {
-    const newPlayer = generatePlayerCard(player, index, currentPlayers)
-    newPlayerList.push(newPlayer)
+    const newPlayer = generatePlayerCard(player, index, currentPlayers);
+    newPlayerList.push(newPlayer);
   });
 
-  // log({currentPlayers})
-
-  display.innerHTML = ''
-  // initiativeDisplay.innerText = initiativeIndex
-  display.append(...newPlayerList)
+  display.innerHTML = '';
+  display.append(...newPlayerList);
 }
 
 function generatePlayerCard(player, index, currentPlayers) {
-  const newPlayer = document.createElement('div');
-	const topPlayerSection = document.createElement('div');
-  const newPlayerName = document.createElement('p');
-  const newPlayerHPNum = document.createElement('p');
-  const newPlayerHP = document.createElement('div');
-  const newPlayerCurrentHP = document.createElement('div');
-  const upInitiative = document.createElement('button');
-  const downInitiative = document.createElement('button');
-	const healthAdjustmentGroup = document.createElement('div');
-  const healthChange = document.createElement('input');
-  const addHealthBtn = document.createElement('button');
-  const loseHealthBtn = document.createElement('button');
+  const newPlayer = createElement('div');
+	const topPlayerSection = createElement('div');
+  const newPlayerName = createElement('p');
+  const newPlayerHPNum = createElement('p');
+  const newPlayerHP = createElement('div');
+  const newPlayerCurrentHP = createElement('div');
+  const upInitiative = createElement('button');
+  const downInitiative = createElement('button');
+	const healthAdjustmentGroup = createElement('div');
+  const healthChange = createElement('input');
+  const addHealthBtn = createElement('button');
+  const loseHealthBtn = createElement('button');
   
 	const currentHealthPercent = Math.floor((player.currentHP / player.maxHP)*100);
 
@@ -159,32 +132,35 @@ function generatePlayerCard(player, index, currentPlayers) {
   upInitiative.addEventListener('mousedown', e => {
     e.preventDefault();
     increaseInitiativeOrder(currentPlayers, index);
-  })
+  });
+
   downInitiative.addEventListener('mousedown', e => {
     e.preventDefault();
     decreaseInitiativeOrder(currentPlayers, index);
-  })
+  });
+
   addHealthBtn.addEventListener('mousedown', e => {
     e.preventDefault();
     addHealth(currentPlayers, index, Math.abs(healthChange.value));
     healthChange.value = null;
-  })
+  });
+
   loseHealthBtn.addEventListener('mousedown', e => {
     e.preventDefault();
     loseHealth(currentPlayers, index, Math.abs(healthChange.value));
     healthChange.value = null;
-  })
+  });
   
   newPlayer.classList.add('player');
-  newPlayerName.classList.add('player-name');
-  newPlayerHPNum.classList.add('player-hp-num');
-	topPlayerSection.classList.add('top-player-section');
   newPlayerHP.classList.add('player-hp');
-	upInitiative.classList.add('move-initiative');
-	downInitiative.classList.add('move-initiative');
+  newPlayerName.classList.add('player-name');
 	addHealthBtn.classList.add('change-health');
 	loseHealthBtn.classList.add('change-health');
+	upInitiative.classList.add('move-initiative');
+  newPlayerHPNum.classList.add('player-hp-num');
+	downInitiative.classList.add('move-initiative');
 	healthChange.classList.add('change-health-input');
+	topPlayerSection.classList.add('top-player-section');
 	healthAdjustmentGroup.classList.add('change-health-group');
   
   topPlayerSection.appendChild(newPlayerName);
@@ -216,7 +192,7 @@ function increaseInitiativeOrder(players, current) {
     initiativeIndex-- :
   initiativeIndex === current ?
     initiativeIndex++ :
-  null
+  null;
 
   players.swap(current, target);
 
@@ -236,7 +212,7 @@ function decreaseInitiativeOrder(players, current) {
     initiativeIndex++ :
   initiativeIndex === current ?
     initiativeIndex-- :
-  null
+  null;
   
   players.swap(current, target);
 
@@ -246,9 +222,6 @@ function decreaseInitiativeOrder(players, current) {
 }
 
 function addHealth(players, current, amount) {
-  // log(`add ${amount} health to ${players[current].currentHP}, then re-render`);
-  // overheal bar should just be an optional extra bar nested within the hp bar,
-  // similar styling but yellow rather than green
   max = players[current].maxHP;
   cur = players[current].currentHP;
   amount = Number(amount);
@@ -261,7 +234,6 @@ function addHealth(players, current, amount) {
 }
 
 function loseHealth(players, current, amount) {
-  log(`remove ${amount} health from ${players[current].currentHP}, minumum 1, then re-render. if the health goes to zero, move them above the person who placed them at 0 health as tracked by the "current turn"`);
   max = players[current].maxHP;
   cur = players[current].currentHP;
   amount = Number(amount);
@@ -281,11 +253,7 @@ function movePlayerPosition(players, current, goal) {
     log('failed to move');
     return;
   }
-  // let i = 0
-  // while(i < 2) {
-  //   increaseInitiativeOrder(players, current)
-  //   i++
-  // }
+ 
   log('repeat the swap command, until the current player is above the initiativeIndex position, making space if needed at top of initiative');
 }
 
