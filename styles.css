@@ -55,7 +55,7 @@ input::-webkit-inner-spin-button {
     -webkit-appearance: none;
 }
 
-input:active {
+input:active, dialog input:active {
 	font-size: 16px;
 }
 
