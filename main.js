@@ -12,40 +12,47 @@ const storeCharacterData = getId('add-character');
 const clearCharacterData = getId('clear-data');
 const furtherInitiative = getId('further-initiative');
 const reverseInitiative = getId('reverse-initiative');
-const initiativeDisplay = getId('initiative');
 const display = getId('data-display');
-const dialog = getId('add-character-dialog');
-const closeDialog = getId('close-dialog');
+const dialogDisplay = getId('dialog-section');
+
+const addDialog = getId('add-character-dialog');
+const newCharacterName = getId('add-character-name');
+const newCharacterHP = getId('add-character-hp');
 const addCharacter = getId('add-player');
-const newCharacterName = getId('character-name');
-const newCharacterHP = getId('character-hp');
+const closeAddDialog = getId('close-add-dialog');
+
+/*
+const editDialog = getId('edit-character-dialog');
+const editCharacterName = getId('edit-character-name');
+const editCharacterHP =  getId('edit-character-hp');
+const saveEdit = getId('save-edit');
+const closeEditDialog = getId('close-edit-dialog');
+*/
 
 const lowHealth = 'red';
 const midHealth = 'yellow';
 const highHealth = 'greenyellow';
 
-const selected = 'rgba(46, 16, 86, 0.7)';
+const selected = 'rgba(46, 16, 86, 0.85)';
 const unselected = 'rgba(46, 16, 86, 0.4)';
 
-//! add an option for updating a player's information by clicking on the health or name section of the card and create a modal popup with places to change the values, as well as an option to save or delete the character. upon deletion shift to the previous position in initiative order
-
 let initiativeIndex = localStorage.getItem('initiativeIndex') ? Number(localStorage.getItem('initiativeIndex')) : 0;
-log(typeof localStorage.getItem('initiativeIndex'));
 
 window.onload = displayPlayerData();
+
 storeCharacterData.addEventListener('mousedown', e => {
 	e.preventDefault();
-	dialog.showModal();
+	addDialog.showModal();
 });
 
-closeDialog.addEventListener('mousedown', e => {
-	dialog.close();
+closeAddDialog.addEventListener('mousedown', e => {
+	addDialog.close();
 });
 
 addCharacter.addEventListener('mousedown', e => {
 	e.preventDefault();
 	
-  const players = localStorage.getItem('players') ? JSON.parse(localStorage.getItem('players')) : []
+  const players = localStorage.getItem('players') ? JSON.parse(localStorage.getItem('players')) : [];
 
   const maxHP = Number(newCharacterHP.value);
   players.push({name: newCharacterName.value, maxHP, currentHP: maxHP });
@@ -54,29 +61,30 @@ addCharacter.addEventListener('mousedown', e => {
 	newCharacterHP.value = '';
   
 	savePlayers(players);
-	dialog.close();
+	addDialog.close();
 });
 
 clearCharacterData.addEventListener('mousedown', e => {
   e.preventDefault();
   localStorage.removeItem('players')
-	initiativeIndex = 1;
+	initiativeIndex = 0;
+	localStorage.setItem(initiativeIndex, 0);
   displayPlayerData();
-})
+});
 
 furtherInitiative.addEventListener('mousedown', e => {
   e.preventDefault();
   initiativeIndex < playerLength ? initiativeIndex++ : initiativeIndex = 0;
 	localStorage.setItem('initiativeIndex', initiativeIndex);
   displayPlayerData();
-})
+});
 
 reverseInitiative.addEventListener('mousedown', e => {
   e.preventDefault();
   initiativeIndex === 0 ? initiativeIndex = playerLength : initiativeIndex--;
 	localStorage.setItem('initiativeIndex', initiativeIndex);
   displayPlayerData();
-})
+});
 
 function displayPlayerData() {
   const currentPlayers = localStorage.getItem('players') ? JSON.parse(localStorage.getItem('players')) : [];
@@ -107,27 +115,75 @@ function generatePlayerCard(player, index, currentPlayers) {
   const newPlayerCurrentHP = createElement('div');
   const upInitiative = createElement('button');
   const downInitiative = createElement('button');
+
 	const healthAdjustmentGroup = createElement('div');
   const healthChange = createElement('input');
   const addHealthBtn = createElement('button');
   const loseHealthBtn = createElement('button');
+	const editDataSection = createElement('div');
+
+	const editDialog = createElement('dialog');
+	const editCharacterName = createElement('input');
+	const editCharacterHP = createElement('input');
+	const saveEdit = createElement('button');
+	const deleteCharacter = createElement('button');
+	const closeEditDialog = createElement('button');
   
 	const currentHealthPercent = Math.floor((player.currentHP / player.maxHP)*100);
 
 	healthChange.type = "number";
 	healthChange.min = 1;
 
-  newPlayerName.innerText = player.name;
   newPlayer.style.backgroundColor = index === initiativeIndex ? selected : unselected;
+  newPlayerName.innerText = player.name;
   newPlayerHPNum.innerText = `${player.currentHP} / ${player.maxHP}`;
   newPlayerCurrentHP.style.width = `${currentHealthPercent > 100 ? 100 : currentHealthPercent}%`;
 	newPlayerCurrentHP.style.backgroundColor = currentHealthPercent < 21 ? lowHealth : currentHealthPercent < 46 ? midHealth : highHealth;
+
+	saveEdit.innerText = 'save';
+	deleteCharacter.innerText = 'delete';
+	closeEditDialog.innerText = 'close';
+
+	if (index === initiativeIndex) {
+		addHealthBtn.style.border = '3px #7446b7 inset';
+		loseHealthBtn.style.border = '3px #7446b7 inset';
+		upInitiative.style.border = '3px #7446b7 inset';
+		downInitiative.style.border = '3px #7446b7 inset';
+	}
 
   upInitiative.innerText = '↑';
   downInitiative.innerText = '↓';
   addHealthBtn.innerText = '+';
   loseHealthBtn.innerText = '-';
   healthChange.type = 'number';
+
+	editDataSection.addEventListener('mousedown', e => {
+		editCharacterName.value = player.name;
+		editCharacterHP.value = player.maxHP;
+		editDialog.showModal();
+	});
+
+	saveEdit.addEventListener('mousedown', e => {
+		player.name = editCharacterName.value;
+		player.maxHP = Number(editCharacterHP.value);
+		
+		if (player.maxHP < player.currentHP) {
+			player.currentHP = player.maxHP;
+		}
+
+		savePlayers(currentPlayers);
+		editDialog.close();
+	});
+
+	closeEditDialog.addEventListener('mousedown', e => {
+		editDialog.close();
+	});
+
+	deleteCharacter.addEventListener('mousedown', e => {
+		currentPlayers.splice(index, 1);
+		savePlayers(currentPlayers);
+		editDialog.close();
+	});
 	
   upInitiative.addEventListener('mousedown', e => {
     e.preventDefault();
@@ -149,22 +205,25 @@ function generatePlayerCard(player, index, currentPlayers) {
     e.preventDefault();
     loseHealth(currentPlayers, index, Math.abs(healthChange.value));
     healthChange.value = null;
-  });
+  });	
   
   newPlayer.classList.add('player');
+	topPlayerSection.classList.add('top-player-section');
+	editDataSection.classList.add('edit-section');
   newPlayerHP.classList.add('player-hp');
   newPlayerName.classList.add('player-name');
+	healthAdjustmentGroup.classList.add('change-health-group');
 	addHealthBtn.classList.add('change-health');
+	healthChange.classList.add('change-health-input');
 	loseHealthBtn.classList.add('change-health');
 	upInitiative.classList.add('move-initiative');
   newPlayerHPNum.classList.add('player-hp-num');
 	downInitiative.classList.add('move-initiative');
-	healthChange.classList.add('change-health-input');
-	topPlayerSection.classList.add('top-player-section');
-	healthAdjustmentGroup.classList.add('change-health-group');
+
+	editDataSection.appendChild(newPlayerName);
+	editDataSection.appendChild(newPlayerHPNum);
   
-  topPlayerSection.appendChild(newPlayerName);
-  topPlayerSection.appendChild(newPlayerHPNum);
+  topPlayerSection.appendChild(editDataSection);
 	
   healthAdjustmentGroup.appendChild(addHealthBtn);
   healthAdjustmentGroup.appendChild(healthChange);
@@ -177,6 +236,14 @@ function generatePlayerCard(player, index, currentPlayers) {
 	newPlayer.appendChild(topPlayerSection);
   newPlayerHP.appendChild(newPlayerCurrentHP);
   newPlayer.appendChild(newPlayerHP);
+
+	editDialog.appendChild(closeEditDialog);
+	editDialog.appendChild(editCharacterName);
+	editDialog.appendChild(editCharacterHP);
+	editDialog.appendChild(deleteCharacter);
+	editDialog.appendChild(saveEdit);
+
+	dialogDisplay.appendChild(editDialog);
 
   return newPlayer;
 }

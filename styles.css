@@ -10,10 +10,6 @@ body, html {
 	font-family: helvetica;
 }
 
-p {
-  margin: 0 10px;
-}
-
 #data-display {
 	margin: 0 5px;
 	height: 93%;
@@ -27,9 +23,16 @@ p {
 	border-radius: 15px;
 }
 
+.edit-section {
+	grid-column: span 6;
+	display: flex;
+}
+
 .player-name, .player-hp-num {
+	width: 50%;
+	display: inline;
 	margin: auto;
-	grid-column: span 3;
+	margin-left: 10px;
 }
 
 .move-initiative {
@@ -93,7 +96,7 @@ input::-webkit-inner-spin-button {
 }
 
 .player-hp {
-  background-color: black;
+  background-color: #242428;
   border-radius: 13px;
   padding: 3px;
 	margin: 4px;
@@ -117,7 +120,8 @@ input::-webkit-inner-spin-button {
 
 #button-controls button {
 	width: 90%;
-	margin: 5px 5px 0px;
+	max-width: 150px;
+	margin: 5px auto 0;
 	
 	border: none;
 	border-radius: 5px;
