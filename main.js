@@ -139,6 +139,9 @@ function generatePlayerCard(player, index, currentPlayers) {
   newPlayerHPNum.innerText = `${player.currentHP} / ${player.maxHP}`;
   newPlayerCurrentHP.style.width = `${currentHealthPercent > 100 ? 100 : currentHealthPercent}%`;
 	newPlayerCurrentHP.style.backgroundColor = currentHealthPercent < 21 ? lowHealth : currentHealthPercent < 46 ? midHealth : highHealth;
+	if (player.currentHP > 0) {
+		newPlayerCurrentHP.style.minWidth = '20px';
+	}
 
 	saveEdit.innerText = 'save';
 	deleteCharacter.innerText = 'delete';

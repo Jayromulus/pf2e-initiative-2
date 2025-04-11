@@ -5,6 +5,8 @@ body, html {
   width: 100vw;
   overflow: hidden;
 
+	font-size: 16px;
+
   background-color: #7446b7;
 	color: white;
 	font-family: helvetica;
@@ -53,10 +55,6 @@ input[type='number'] {
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
-}
-
-input:active, dialog input:active {
-	font-size: 16px;
 }
 
 .change-health-input {
@@ -134,4 +132,10 @@ input:active, dialog input:active {
 	color: #e3e3e3;
 
 	padding: 5px;
+}
+
+@media screen and (max-width: 500px) {
+	input:active, dialog input:active {
+		font-size: 16px;
+	}
 }
